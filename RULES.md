@@ -16,6 +16,25 @@ File ini adalah default prompt untuk mengubah input kosakata bahasa Sambas menja
 2. Pattern: `<NNN>-<nama_website>:<alamat_website>.csv` - contoh `003-kamus sambas:kamussambas.com.csv`.
 3. Selalu buat file baru. Jangan pernah menimpa, mengubah, atau menghapus file batch lama maupun `000-templat-import-kata.csv`.
 
+## Metadata header (sebelum header CSV)
+
+File output diawali blok komentar `#` dengan direktif `@` sebagai identifier - bukan bagian data CSV:
+
+```
+# @format sambasku-dictionary
+# @version 1
+# @encoding UTF-8
+# @separator ,
+# @title <nama website>
+# @url <domain utama>
+# @required kata,terjemahan,penjelasan_arti,contoh
+```
+
+- `@title` diisi dari nama website (input baris 1), `@url` dari alamat website (input baris 2, domain utama saja - aturan sama dengan penamaan file). Jika tidak disediakan, tulis kuncinya tetap dengan nilai kosong (`# @title`); nanti app di browser atau runner/action yang mengisinya.
+- Direktif lain (`@format`, `@version`, `@encoding`, `@separator`, `@required`) selalu ditulis tetap dengan nilai seperti contoh; `@required` wajib cocok dengan header template.
+- Baris `#` tambahan (tanpa `@`) boleh sebagai catatan bebas.
+- Sisi pembaca (app/runner): abaikan semua baris `#` di awal file. File CSV normal tanpa blok ini tetap valid - baris pertama langsung header.
+
 ## Struktur kolom (header wajib sama dengan template)
 
 ```
@@ -39,4 +58,4 @@ kata,terjemahan,penjelasan_arti,contoh
 
 ## Validasi wajib setelah menulis
 
-Parse file hasil dengan Python `csv.reader`, pastikan **setiap baris tepat 4 kolom**. Laporan akhir: nama file, jumlah baris data, jumlah entri dengan terjemahan kosong.
+Parse file hasil dengan Python `csv.reader` (lewati baris yang diawali `#`), pastikan **setiap baris data tepat 4 kolom**. Laporan akhir: nama file, jumlah baris data, jumlah entri dengan terjemahan kosong.
