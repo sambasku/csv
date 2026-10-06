@@ -1,12 +1,3 @@
-# @format sambasku-dictionary
-# @version 1
-# @encoding UTF-8
-# @separator ,
-# @title Kamus Penyakit Melayu Sambas
-# @url id.scribd.com
-# @required kata,terjemahan,penjelasan_arti,contoh
-# Sumber: id.scribd.com/document/494414598 (Kamus Penyakit Melayu Sambas)
-# terjemahan diisi '-' sementara, diisi manual oleh penyunting.
 kata,terjemahan,penjelasan_arti,contoh
 Kalingsame,-,"Kalingsame itu penyakit yang diakibatkan virus yang ada dihidung, biasanya orang yang terkena kalingsame hidungnya berair terus. Cara menyembuhkannya dengan air garam yang dimasukkan ke lubang hidung.",
 Binsol,-,"Binsol itu penyakit yang ada di badan, biasanya ada di pantat. Bentuknya itu seperti benjolan yang mengandung nanah, biasanya kalau di sentuh menyakitkan. Cara mengobatinya dengan di kompres dengan air hangat.",
