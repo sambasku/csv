@@ -53,9 +53,9 @@ kata,terjemahan,penjelasan_arti,contoh
 - Field yang mengandung koma **wajib** dibungkus kutip ganda `"..."` (berlaku paling sering di kolom contoh).
 - Apostrof `'` tidak perlu di-escape.
 - Pertahankan urutan baris sesuai sumber - jangan sortir ulang.
-- Entri yang artinya kosong/tidak lengkap di sumber tetap ditulis dengan kolom kosong (agar bisa dilengkapi nanti); catat entri tersebut di laporan akhir.
+- Entri dengan `terjemahan` kosong **tidak ditulis ke file** (dihapus/dieliminasi). Kata tanpa arti tidak layak masuk kamus. Catat entri yang dieliminasi di laporan akhir (jumlah + daftar katanya).
 - Typo kecil di sumber boleh dibersihkan (kapitalisasi, spasi), tapi jangan mengubah makna.
 
 ## Validasi wajib setelah menulis
 
-Parse file hasil dengan Python `csv.reader` (lewati baris yang diawali `#`), pastikan **setiap baris data tepat 4 kolom**. Laporan akhir: nama file, jumlah baris data, jumlah entri dengan terjemahan kosong.
+Parse file hasil dengan Python `csv.reader` (lewati baris yang diawali `#`), pastikan **setiap baris data tepat 4 kolom** dan **tidak ada baris dengan `terjemahan` kosong** (yang kosong sudah harus tereliminasi sebelum penulisan). Laporan akhir: nama file, jumlah baris data, jumlah entri dengan terjemahan kosong (wajib `0`), daftar entri yang dieliminasi.
