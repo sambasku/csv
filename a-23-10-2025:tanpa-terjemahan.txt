@@ -1,0 +1,38 @@
+1	Najor
+2	Kerimai-kerimai
+8	Bogek
+10	Nyanyok
+12	Jingap-jingap
+16	Ngelotok
+17	Cangkau
+28	Tesampang
+33	Makan mial
+35	Tarang tanah
+37	Jambal
+39	Pak ulak
+41	Munggor
+42	Ngussal
+47	Bacup
+77	Ngelissap
+77	Selili
+77	Intayap
+129	Antang
+129	Anggan
+137	Lammau
+224	Gerambang
+246	Intemek
+246	Ngerepek
+283	Kumbo'
+299	Kecoro kecoro
+299	Meloros
+300	Kelingas kelingas
+355	Mencer : tergeletak; nganggur;
+356	Maddas
+357	Miniek
+375	Mer
+375	Semorengan
+378	Nukok
+409	Pinggan
+486	Sallap
+487	Sumenye
+488	Sume'ng
