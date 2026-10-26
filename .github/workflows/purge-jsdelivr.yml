@@ -1,0 +1,71 @@
+name: Purge jsDelivr CDN
+
+# Setiap push ke main = konten CDN harus ikut mutakhir. jsDelivr cache
+# ~12 jam; tanpa purge, file baru/edit baru terlihat terlambat.
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: purge-jsdelivr
+  cancel-in-progress: true
+
+jobs:
+  purge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Kumpulkan path file yang berubah
+        id: files
+        run: |
+          # Semua file di repo (bukan hanya yang berubah): repo kecil,
+          # purge penuh lebih sederhana dan aman daripada diff path -
+          # file baru otomatis terpurge tanpa aturan tambahan.
+          # Batas jsDelivr: paket max 50 file per request purge.
+          FILES=$(git ls-files \
+            | grep -vF '.DS_Store' \
+            | sed 's|^|/gh/sambasku/csv@main/|')
+          COUNT=$(echo "$FILES" | wc -l | tr -d ' ')
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "$FILES" > /tmp/files.txt
+          echo "Akan purge $COUNT file"
+
+      - name: Purge jsDelivr
+        if: steps.files.outputs.count != '0'
+        run: |
+          # Split 50 path per request (batas API purge.jsdelivr.net).
+          split -l 50 /tmp/files.txt /tmp/chunk_
+          for chunk in /tmp/chunk_*; do
+            # Bangun array JSON ["path1","path2",...]
+            JSON=$(
+              python3 - "$chunk" <<'PYEOF'
+          import json, sys
+          with open(sys.argv[1]) as f:
+              paths = [line.strip() for line in f if line.strip()]
+          print(json.dumps(paths))
+          PYEOF
+            )
+            RESPONSE=$(curl -s -X POST https://purge.jsdelivr.net/ \
+              -H "Content-Type: application/json" \
+              -d "{\"path\": $JSON}")
+            echo "$RESPONSE"
+            # Cek status per request (id + status pending ok).
+            echo "$RESPONSE" | grep -q '"status"' \
+              || { echo "Purge gagal untuk chunk $chunk"; exit 1; }
+          done
+
+      - name: Verifikasi (opsional, sampel 1 file)
+        if: steps.files.outputs.count != '0'
+        run: |
+          # Beri waktu cache kerja lalu cek satu file contoh.
+          sleep 10
+          FIRST=$(head -1 /tmp/files.txt)
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" "https://cdn.jsdelivr.net$FIRST")
+          echo "Sample $FIRST -> HTTP $CODE"
+          [ "$CODE" = "200" ] || echo "Peringatan: sampel belum 200 (purge bisa masih pending)"
